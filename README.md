@@ -4,7 +4,9 @@
 ### June 2018
 
 # 1/ Project overview
-This project will utilise several image filtering and machine learning algorithms to train a robot to recognise objects in 3D space. This process devide into two main sub-process. Firstly, objects are captured by RGBD camera and put through an image processing pipeline. Secondly, these images will be used to train a robot with SVM algorithm.
+This project will utilise several image filtering and machine learning algorithms to train a robot to recognise objects in 3D space. This process devide into two main sub-process. Firstly, objects are captured by RGBD camera and put through an image processing pipeline. Secondly, these images will be used to train a robot with SVM algorithm. Thirdly, after training with SVM algorithm, models of trainning objects will be saved and used in online object detection process. Finally, the robot will be programmed to calculate each object's centroid and store into yaml files. These yaml files will be used later for pick-and-place task. 
+
+In this project, I only concentrate on developing the image processing pipeline to segment and detect objects, then, calculate objects's centroids and output yaml files. pick-and-place task was not fully implemented.
 
 # 2/ The Perception Pipeline
 

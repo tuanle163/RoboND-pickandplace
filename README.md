@@ -33,7 +33,7 @@ I found **K-mean of 3** and **Threshold Scale Factor of 0.00001** are the most s
 ### Picture
 Below is the result of my filter.
 
-<p align="center"> <img src="./percept/Exercise 01 Noise Filter.png"> </p>
+<p align="center"> <img src="./src/percept/Exercise 01 Noise Filter.png"> </p>
 
 ## 2.b - Voxel Grid Downsampling
 ### Description
@@ -56,7 +56,7 @@ My code is shown as below:
 
 ### Picture
 Here is result image of my Point Cloud clusters.
-<p align="center"> <img src="./percept/Exercise 1 Downsampling.png"> </p>
+<p align="center"> <img src="./src/percept/Exercise 1 Downsampling.png"> </p>
 
 ## 2.c - PassThrough Filter
 ### Description
@@ -88,7 +88,7 @@ This filter acts as a dropping tool in three-dimension space. Point Cloud image 
 After experimenting with various value, the **axis_min** and **axis_max** in z-axis are 0.6 and 1.1 respectively. In the y-axis, the **axis_min** and **axis_max** are -0.5 and 0.5 respectively. The result of the filter is shown in the picture below.
 
 ### Picture
-<p align="center"> <img src="./percept/Exercise 1 Passthrough.png"> </p>
+<p align="center"> <img src="./src/percept/Exercise 1 Passthrough.png"> </p>
 
 ## 2.d - RANSAC Plane Segmentation
 ### Description
@@ -118,10 +118,10 @@ Next in the perception pipeline, we need to separate the table and the objects. 
 
 ### Picture
 #### Image of the objects:
-<p align="center"> <img src="./percept/Exercise 1 Objects.png"> </p>
+<p align="center"> <img src="./src/percept/Exercise 1 Objects.png"> </p>
 
 #### Image of the table:
-<p align="center"> <img src="./percept/Exercise 1 Table.png"> </p>
+<p align="center"> <img src="./src/percept/Exercise 1 Table.png"> </p>
 
 ## Exercise 2
 ## 2.e - Euclidean Clustering
@@ -164,7 +164,7 @@ After finishing the Euclidean Clustering, we need to assign color to each cluste
 ```
 
 ### Picture
-<p align="center"> <img src="./percept/Exercise 1 Cluster.png"> </p>
+<p align="center"> <img src="./src/percept/Exercise 1 Cluster.png"> </p>
 
 ## 2.g - Converting PointCloud data to ROS messages and publish
 ### Description
@@ -327,7 +327,7 @@ Here is my **Confusion Matrix** and **Normalized Confusion Matrix**.
 | Scores | **[0.9167 0.9167 0.9167 0.8333 1.000]** |
 | Accuracy | **0.92 (+/- 0.11)** |
 | Accuracy Score | **0.9167** |
-<p align="center"> <img src="./percept/Test_1_Confusion_Matrix.png"> </p>
+<p align="center"> <img src="./src/percept/Test_1_Confusion_Matrix.png"> </p>
 
 #### Confusion Matrix of Pick List 2 (Accuracy Score of 0.86)
 
@@ -338,7 +338,7 @@ Here is my **Confusion Matrix** and **Normalized Confusion Matrix**.
 | Scores | **[1.000 0.800 0.800 0.850 0.850]** |
 | Accuracy | **0.86 (+/- 0.15)** |
 | Accuracy Score | **0.860** |
-<p align="center"> <img src="./percept/Test_2_Confusion_Matrix.png"> </p>
+<p align="center"> <img src="./src/percept/Test_2_Confusion_Matrix.png"> </p>
 
 #### Confusion Matrix of Pick List 3 (Accuracy Score of 0.85)
 
@@ -349,7 +349,7 @@ Here is my **Confusion Matrix** and **Normalized Confusion Matrix**.
 | Scores | **[0.874 0.781 0.844 0.813 0.938]** |
 | Accuracy | **0.85 (+/- 0.11)** |
 | Accuracy Score | **0.85** |
-<p align="center"> <img src="./percept/Test_3_Confusion_Matrix.png"> </p>
+<p align="center"> <img src="./src/percept/Test_3_Confusion_Matrix.png"> </p>
 
 ## 3.d - Objects Detection
 This is the third exercise part in the pcl_callback() function where the cluster of objects is classified.
@@ -421,13 +421,13 @@ Before go to the object prediction, create two lists of **detected_objects_label
 Follwing images showing the objects with names:
 
 #### Pick List 1 (100% Accuracy)
-<p align="center"> <img src="./percept/Labels of Pick List 1.png"> </p>
+<p align="center"> <img src="./src/percept/Labels of Pick List 1.png"> </p>
 
 #### Pick List 2 (100% Accuracy)
-<p align="center"> <img src="./percept/Label Pick List 2.png"> </p>
+<p align="center"> <img src="./src/percept/Label Pick List 2.png"> </p>
 
 #### Pick List 3 (100% Accuracy)
-<p align="center"> <img src="./percept/Label Pick List 3.png"> </p>
+<p align="center"> <img src="./src/percept/Label Pick List 3.png"> </p>
 
 #### PR2_mover Function
 Last part of the **pcl_callback()** function is to invoke the **pr2_mover()** function to pick and place the detected objects.
@@ -521,11 +521,11 @@ Final step is to output all parameters into an associated yaml file.
     send_to_yaml(yaml_filename, yaml_dict_list)
 ```
 ## Output Yaml Files
-[**output_1.yaml**](./pr2_robot/config/output_1.yaml)
+[**output_1.yaml**](./src/pr2_robot/config/output_1.yaml)
 
-[**output_2.yaml**](./pr2_robot/config/output_2.yaml)
+[**output_2.yaml**](./src/pr2_robot/config/output_2.yaml)
 
-[**output_3.yaml**](./pr2_robot/config/output_3.yaml)
+[**output_3.yaml**](./src/pr2_robot/config/output_3.yaml)
 
 # 5/ Discussion and Future Improvements
 

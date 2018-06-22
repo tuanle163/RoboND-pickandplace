@@ -528,5 +528,7 @@ Final step is to output all parameters into an associated yaml file.
 [**output_3.yaml**](./src/pr2_robot/config/output_3.yaml)
 
 # 5/ Discussion and Future Improvements
+The perception pipeline results show good outcomes and can segment all the objects. The values of each stage were chosen approximately and randomly through trial-and-error method. Even though the results are satisfied, the values are not optimal. Therefore, a method is needed to obtain the optimal values.
 
+One aspect need to be improved is the feature capturing process. The feature capturing process depends on two ways which are not enough. A situation, where both methods (color histogram and normal histogram) will fail, is trying to capture features of two objects with the similar size, shape and colors. To solve this problem, we can use point cloud data after segmentation to add into capture featuring data because point cloud data with color is easy to distinguish.  
 

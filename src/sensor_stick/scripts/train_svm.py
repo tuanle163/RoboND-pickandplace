@@ -62,7 +62,7 @@ encoder = LabelEncoder()
 y_train = encoder.fit_transform(y_train)
 
 # Create classifier
-clf = svm.SVC(kernel='linear') # default: linear
+clf = svm.SVC(kernel='sigmoid') # default: linear
 
 # Set up 5-fold cross-validation
 kf = cross_validation.KFold(len(X_train),
@@ -73,7 +73,7 @@ kf = cross_validation.KFold(len(X_train),
 # Perform cross-validation
 scores = cross_validation.cross_val_score(cv=kf,
                                          estimator=clf,
-                                         X=X_train, 
+                                         X=X_train,
                                          y=y_train,
                                          scoring='accuracy'
                                         )
@@ -83,7 +83,7 @@ print('Accuracy: %0.2f (+/- %0.2f)' % (scores.mean(), 2*scores.std()))
 # Gather predictions
 predictions = cross_validation.cross_val_predict(cv=kf,
                                           estimator=clf,
-                                          X=X_train, 
+                                          X=X_train,
                                           y=y_train
                                          )
 

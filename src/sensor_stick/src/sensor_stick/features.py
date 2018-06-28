@@ -32,18 +32,19 @@ def compute_color_histograms(cloud, using_hsv=False): # Default: False
         channel_1_vals.append(color[0])
         channel_2_vals.append(color[1])
         channel_3_vals.append(color[2])
-    
+    bins = 32
+    ranges = (0, 256)
     # TODO: Compute histograms
-    R_hist = np.histogram(channel_1_vals, bins = 32, range = (0, 256))
-    G_hist = np.histogram(channel_2_vals, bins = 32, range = (0, 256))
-    B_hist = np.histogram(channel_3_vals, bins = 32, range = (0, 256))
+    R_hist = np.histogram(channel_1_vals, bins = bins, range = ranges)
+    G_hist = np.histogram(channel_2_vals, bins = bins, range = ranges)
+    B_hist = np.histogram(channel_3_vals, bins = bins, range = ranges)
     #print(R_hist)
     # TODO: Concatenate and normalize the histograms
     hist_features = np.concatenate((R_hist[0], G_hist[0], B_hist[0])).astype(np.float64)
-    # Generate random features for demo mode.  
+    # Generate random features for demo mode.
     # Replace normed_features with your feature vector
     normed_features = hist_features / np.sum(hist_features)
-    return normed_features 
+    return normed_features
 
 
 def compute_normal_histograms(normal_cloud):
@@ -59,12 +60,17 @@ def compute_normal_histograms(normal_cloud):
         norm_z_vals.append(norm_component[2])
 
     # TODO: Compute histograms of normal values (just like with color)
-    Nor_x_hist = np.histogram(norm_x_vals, bins = 32, range = (0, 256))
-    Nor_y_hist = np.histogram(norm_y_vals, bins = 32, range = (0, 256))
-    Nor_z_hist = np.histogram(norm_z_vals, bins = 32, range = (0, 256))
+    # The range of normal histogram is from -1 to 1 because of its
+    bins = 32
+    # Because the range of normal vector is bounced with sine and cosine
+    ranges = (-1, 1)
+    Nor_x_hist = np.histogram(norm_x_vals, bins = bins, range = ranges)
+    Nor_y_hist = np.histogram(norm_y_vals, bins = bins, range = ranges)
+    Nor_z_hist = np.histogram(norm_z_vals, bins = bins, range = ranges)
+    #print( Nor_x_hist)
     # TODO: Concatenate and normalize the histograms
     hist_features = np.concatenate((Nor_x_hist[0], Nor_y_hist[0], Nor_z_hist[0])).astype(np.float64)
-    # Generate random features for demo mode.  
+    # Generate random features for demo mode.
     # Replace normed_features with your feature vector
     normed_features = hist_features / np.sum(hist_features)
 

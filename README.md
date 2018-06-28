@@ -4,7 +4,7 @@
 ### June 2018
 
 # 1/ Project overview
-This project will utilise several image filtering and machine learning algorithms to train a robot to recognise objects in 3D space. This process devide into two main sub-process. Firstly, objects are captured by RGBD camera and put through an image processing pipeline. Secondly, these images will be used to train a robot with SVM algorithm. Thirdly, after training with SVM algorithm, models of trainning objects will be saved and used in online object detection process. Finally, the robot will be programmed to calculate each object's centroid and store into yaml files. These yaml files will be used later for pick-and-place task. 
+This project will utilise several image filtering and machine learning algorithms to train a robot to recognise objects in 3D space. This process devide into two main sub-process. Firstly, objects are captured by RGBD camera and put through an image processing pipeline. Secondly, these images will be used to train a robot with SVM algorithm. Thirdly, after training with SVM algorithm, models of trainning objects will be saved and used in online object detection process. Finally, the robot will be programmed to calculate each object's centroid and store into yaml files. These yaml files will be used later for pick-and-place task.
 
 In this project, I only concentrate on developing the image processing pipeline to segment and detect objects, then, calculate objects's centroids and output yaml files. pick-and-place task was not fully implemented.
 
@@ -214,17 +214,17 @@ def compute_color_histograms(cloud, using_hsv=False): # Default: False
     channel_1_vals = []
     channel_2_vals = []
     channel_3_vals = []
-
     for color in point_colors_list:
         channel_1_vals.append(color[0])
         channel_2_vals.append(color[1])
         channel_3_vals.append(color[2])
-
+    bins = 32
+    ranges = (0, 256)
     # TODO: Compute histograms
-    R_hist = np.histogram(channel_1_vals, bins = 32, range = (0, 256))
-    G_hist = np.histogram(channel_2_vals, bins = 32, range = (0, 256))
-    B_hist = np.histogram(channel_3_vals, bins = 32, range = (0, 256))
-
+    R_hist = np.histogram(channel_1_vals, bins = bins, range = ranges)
+    G_hist = np.histogram(channel_2_vals, bins = bins, range = ranges)
+    B_hist = np.histogram(channel_3_vals, bins = bins, range = ranges)
+    #print(R_hist)
     # TODO: Concatenate and normalize the histograms
     hist_features = np.concatenate((R_hist[0], G_hist[0], B_hist[0])).astype(np.float64)
     # Generate random features for demo mode.
@@ -234,6 +234,7 @@ def compute_color_histograms(cloud, using_hsv=False): # Default: False
 ```
 
 ### Normal Histogram
+Normal Historgram (**compute_normal_histograms**) is calculated like the Color Histogram but the range is from -1 to 1.
 
 ```Python
 def compute_normal_histograms(normal_cloud):
@@ -249,9 +250,14 @@ def compute_normal_histograms(normal_cloud):
         norm_z_vals.append(norm_component[2])
 
     # TODO: Compute histograms of normal values (just like with color)
-    Nor_x_hist = np.histogram(norm_x_vals, bins = 32, range = (0, 256))
-    Nor_y_hist = np.histogram(norm_y_vals, bins = 32, range = (0, 256))
-    Nor_z_hist = np.histogram(norm_z_vals, bins = 32, range = (0, 256))
+    # The range of normal histogram is from -1 to 1 because of its
+    bins = 32
+    # Because the range of normal vector is bounced with sine and cosine
+    ranges = (-1, 1)
+    Nor_x_hist = np.histogram(norm_x_vals, bins = bins, range = ranges)
+    Nor_y_hist = np.histogram(norm_y_vals, bins = bins, range = ranges)
+    Nor_z_hist = np.histogram(norm_z_vals, bins = bins, range = ranges)
+    #print( Nor_x_hist)
     # TODO: Concatenate and normalize the histograms
     hist_features = np.concatenate((Nor_x_hist[0], Nor_y_hist[0], Nor_z_hist[0])).astype(np.float64)
     # Generate random features for demo mode.
@@ -259,6 +265,7 @@ def compute_normal_histograms(normal_cloud):
     normed_features = hist_features / np.sum(hist_features)
 
     return normed_features
+
 ```
 
 ## 3.b - Features Capturing
@@ -312,11 +319,11 @@ pickle.dump(labeled_features, open('training_set.sav', 'wb'))
 ## 3.c - SVM Training
 SVM is stand for (Support Vector Machine). SVM is an machine learning algorithm which is used to segment data points into clusters. The segmentation will be depend on **kernel function**.
 
-In this project, I used the **linear kernel function** to avoid overfitting. Here is my code in __train_pvm.py__
+In this project, I used the **sigmoid kernel function** to avoid overfitting. Here is my code in __train_pvm.py__
 
 ```Python
 # Create classifier
-clf = svm.SVC(kernel='linear') # default: linear
+clf = svm.SVC(kernel='sigmoid') # default: linear
 ```
 Here is my **Confusion Matrix** and **Normalized Confusion Matrix**.
 
@@ -326,10 +333,10 @@ Here is my **Confusion Matrix** and **Normalized Confusion Matrix**.
 |-|-|
 | Features in Training Set | **60** |
 | Invalid Features in Training Set | **0** |
-| Scores | **[0.9167 0.9167 0.9167 0.8333 1.000]** |
-| Accuracy | **0.92 (+/- 0.11)** |
-| Accuracy Score | **0.9167** |
-<p align="center"> <img src="./src/percept/Test_1_Confusion_Matrix.png"> </p>
+| Scores | **[1.000 0.833 0.833 0.667 0.833]** |
+| Accuracy | **0.833 (+/- 0.21)** |
+| Accuracy Score | **0.833** |
+<p align="center"> <img src="./src/percept/Matrix_List_01.png"> </p>
 
 #### Confusion Matrix of Pick List 2 (Accuracy Score of 0.86)
 
@@ -337,10 +344,10 @@ Here is my **Confusion Matrix** and **Normalized Confusion Matrix**.
 |-|-|
 | Features in Training Set | **100** |
 | Invalid Features in Training Set | **0** |
-| Scores | **[1.000 0.800 0.800 0.850 0.850]** |
-| Accuracy | **0.86 (+/- 0.15)** |
-| Accuracy Score | **0.860** |
-<p align="center"> <img src="./src/percept/Test_2_Confusion_Matrix.png"> </p>
+| Scores | **[0.950 0.850 0.750 0.700 0.750]** |
+| Accuracy | **0.800 (+/- 0.18)** |
+| Accuracy Score | **0.800** |
+<p align="center"> <img src="./src/percept/Matrix_List_02.png"> </p>
 
 #### Confusion Matrix of Pick List 3 (Accuracy Score of 0.85)
 
@@ -348,10 +355,12 @@ Here is my **Confusion Matrix** and **Normalized Confusion Matrix**.
 |-|-|
 | Features in Training Set | **160** |
 | Invalid Features in Training Set | **0** |
-| Scores | **[0.874 0.781 0.844 0.813 0.938]** |
-| Accuracy | **0.85 (+/- 0.11)** |
-| Accuracy Score | **0.85** |
-<p align="center"> <img src="./src/percept/Test_3_Confusion_Matrix.png"> </p>
+| Scores | **[0.906 0.875 0.781 0.781 0.938]** |
+| Accuracy | **0.86 (+/- 0.13)** |
+| Accuracy Score | **0.856** |
+<p align="center"> <img src="./src/percept/Matrix_List_03.png"> </p>
+
+jaldkfj;skfjl
 
 ## 3.d - Objects Detection
 This is the third exercise part in the pcl_callback() function where the cluster of objects is classified.
@@ -420,16 +429,16 @@ Before go to the object prediction, create two lists of **detected_objects_label
    # Publish the list of detected objects
 
 ```
-Follwing images showing the objects with names:
+Following images showing the objects with their labels. All the world scene were run on one **model.sav** file which was trained based on the Pick List 3.
 
 #### Pick List 1 (100% Accuracy)
-<p align="center"> <img src="./src/percept/Labels of Pick List 1.png"> </p>
+<p align="center"> <img src="./src/percept/Label 01.png"> </p>
 
 #### Pick List 2 (100% Accuracy)
-<p align="center"> <img src="./src/percept/Label Pick List 2.png"> </p>
+<p align="center"> <img src="./src/percept/Label 02.png"> </p>
 
 #### Pick List 3 (100% Accuracy)
-<p align="center"> <img src="./src/percept/Label Pick List 3.png"> </p>
+<p align="center"> <img src="./src/percept/Label 03.png"> </p>
 
 #### PR2_mover Function
 Last part of the **pcl_callback()** function is to invoke the **pr2_mover()** function to pick and place the detected objects.
@@ -523,14 +532,13 @@ Final step is to output all parameters into an associated yaml file.
     send_to_yaml(yaml_filename, yaml_dict_list)
 ```
 ## Output Yaml Files
-[**output_1.yaml**](./src/pr2_robot/config/output_1.yaml)
+[**output_1.yaml**](./src/pr2_robot/scripts/output_1.yaml)
 
-[**output_2.yaml**](./src/pr2_robot/config/output_2.yaml)
+[**output_2.yaml**](./src/pr2_robot/scripts/output_2.yaml)
 
-[**output_3.yaml**](./src/pr2_robot/config/output_3.yaml)
+[**output_3.yaml**](./src/pr2_robot/scripts/output_3.yaml)
 
 # 5/ Discussion and Future Improvements
 The perception pipeline results show good outcomes and can segment all the objects. The values of each stage were chosen approximately and randomly through trial-and-error method. Even though the results are satisfied, the values are not optimal. Therefore, a method is needed to obtain the optimal values.
 
-One aspect need to be improved is the feature capturing process. The feature capturing process depends on two ways which are not enough. A situation, where both methods (color histogram and normal histogram) will fail, is trying to capture features of two objects with the similar size, shape and colors. To solve this problem, we can use point cloud data after segmentation to add into capture featuring data because point cloud data with color is easy to distinguish.  
-
+One aspect need to be improved is the feature capturing process. The feature capturing process depends on two ways which are not enough. A situation, where both methods (color histogram and normal histogram) will fail, is trying to capture features of two objects with the similar size, shape and colors. To solve this problem, we can use point cloud data after segmentation to add into capture featuring data because point cloud data with color is easy to distinguish.
